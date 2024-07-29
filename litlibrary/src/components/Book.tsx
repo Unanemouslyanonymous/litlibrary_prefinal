@@ -11,6 +11,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ReviewModal from "./ReviewModal";
 import Review from "./Review";
 import dotenv from "dotenv";
+import bookModel from "@/app/models/bookModel";
 dotenv.config();
 
 interface BookProps {
@@ -148,6 +149,20 @@ const Book: React.FC<BookProps> = ({ book }) => {
       console.error('Error adding review:', error);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      if (user?.favorites.some((b: bookModel) => b.title === book.title)) {
+        setIsFavorite(true);
+      }
+      if (user?.purchasedBooks.some((b: bookModel) => b.title === book.title)) {
+        setIsPurchased(true);
+      }
+      if (user?.collections.some((b: bookModel) => b.title === book.title)) {
+        setIsInDb(true);
+      }
+    }
+  }, [user, book]);
 
   useEffect(() => {
     if (isPopupOpen) {
