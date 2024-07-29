@@ -29,11 +29,12 @@ const ProfilePage = () => {
   const [favorites, setFavorites] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState(user.name);
-  const [email, setEmail] = useState(user.email);
+  const [name, setName] = useState(user?.name);
+  const [email, setEmail] = useState(user?.email);
   const [password, setPassword] = useState("");
+
   useEffect(() => {
-    if (!isAuthenticated) router.push("/login&origin=profile");
+    if (!isAuthenticated) router.push("/login?origin=profile");
   }, [isAuthenticated, router]);
 
   useEffect(() => {
@@ -69,7 +70,7 @@ const ProfilePage = () => {
   const handleEditProfile = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await axios.put(
+      await axios.put(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/update-profile`,
         { name, email, password },
         {
@@ -159,10 +160,10 @@ const ProfilePage = () => {
           ) : (
             <div>
               <p className="mb-2">
-                <strong>Name:</strong> {user.name}
+                <strong>Name:</strong> {user?.name}
               </p>
               <p className="mb-2">
-                <strong>Email:</strong> {user.email}
+                <strong>Email:</strong> {user?.email}
               </p>
               <Button
                 onClick={() => setIsEditing(true)}

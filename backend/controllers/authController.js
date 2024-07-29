@@ -141,5 +141,40 @@ const resetPassword = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+export const updateProfile = async (req, res) => {
+    const { name, email, password, securityQuestions, securityAnswers } = req.body;
+  
+    // Build user object
+    const userFields = {};
+    if (name) userFields.name = name;
+    if (email) userFields.email = email;
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      userFields.password = await bcrypt.hash(password, salt);
+    }
+    if (securityQuestions && securityAnswers) {
+      userFields.securityQuestions = securityQuestions;
+      userFields.securityAnswers = securityAnswers;
+    }
+  
+    try {
+      let user = await User.findById(req.user.id);
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      user = await User.findByIdAndUpdate(
+        req.user.id,
+        { $set: userFields },
+        { new: true }
+      ).select("-password");
+  
+      res.json(user);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  };
 
 export { register, login, loadUser, forgotPassword, resetPassword };

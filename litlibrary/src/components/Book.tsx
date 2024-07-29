@@ -30,6 +30,7 @@ const Book: React.FC<BookProps> = ({ book }) => {
   if (!authContext) return null;
   const { token, user } = authContext;
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isPurchased, setIsPurchased] = useState(false);
   const [isInDb, setIsInDb] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [reviews, setReviews] = useState([]);
@@ -118,6 +119,7 @@ const Book: React.FC<BookProps> = ({ book }) => {
           },
         }
       );
+      setIsPurchased(true)
       console.log("Book purchased:", response.data);
     } catch (error) {
       console.error("Error purchasing book:", error);
@@ -221,9 +223,12 @@ const Book: React.FC<BookProps> = ({ book }) => {
                 ) : (
                   <Button onClick={addFavorite}>Add to Favorites</Button>
                 )}
-                <Button onClick={purchaseBook}>
+                {
+                  !isPurchased ? <Button onClick={purchaseBook}>
                   Buy for ${book.page === 0 || book.page == null ? 150 : book.page}
-                </Button>
+                </Button> : <Button disabled>Already Purchased</Button>
+                }
+                
                 {isInDb ? (
                   <Button onClick={deleteBook}>Remove from Collection</Button>
                 ) : (
