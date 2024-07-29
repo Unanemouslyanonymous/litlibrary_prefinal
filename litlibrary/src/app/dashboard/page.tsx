@@ -4,7 +4,6 @@ import { useState, useEffect, useContext } from "react";
 import Book from "../../components/Book";
 import { Search } from "lucide-react";
 import { AuthContext } from "@/context/AuthContext";
-import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
@@ -15,9 +14,8 @@ const Dashboard = () => {
   if (!authContext) return null;
   const { user, isAuthenticated } = authContext;
   const [searchQuery, setSearchQuery] = useState<string>("Harry Potter");
-  const [books, setBooks] = useState<any>();
+  const [books, setBooks] = useState<any[]>([]);
 
- 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -26,14 +24,15 @@ const Dashboard = () => {
         { params: { searchQuery } }
       );
       setBooks(response.data);
-      console.log("frntedn data", response.data);
     } catch (error) {
       console.error("Error searching books:", error);
     }
   };
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
+
   useEffect(() => {
     if (!isAuthenticated) {
       router.push("/login?origin=dashboard");
@@ -69,16 +68,14 @@ const Dashboard = () => {
       </div>
 
       <div className="mt-12 flex flex-wrap justify-center items-start gap-2">
-        {books ?
-          books.map((book: any, index: number) => (
-            <Book key={index} book={book} />
-          ))
-        :
-          <div className="text-2xl font-semibold flex justify-center" >No books found, Please Enter Search</div>
-        }
+        {books.length > 0 ? (
+          books.map((book, index) => <Book key={index} book={book} />)
+        ) : (
+          <div className="text-2xl font-semibold flex justify-center">
+            No books found, Please Enter Search
+          </div>
+        )}
       </div>
-
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>*/}
     </div>
   );
 };

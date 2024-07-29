@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,6 +17,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
+
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -37,17 +37,24 @@ const Login = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    try{
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-        email,
-        password
-      });
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+        {
+          email,
+          password,
+        }
+      );
       login(res.data.token);
-    }catch(err){
+    } catch (err) {
       setIsError(true);
       console.error(err);
     }
-    }
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/google/`;
+  };
 
   return (
     <MaxWidthWrapper>
@@ -59,10 +66,10 @@ const Login = () => {
               Enter your email below to login to your account
             </CardDescription>
             {isError && (
-                <h4 className=" font-thin text-sm text-red-500 flex align-middle text-center">
-                  Invalid Credentials
-                </h4>
-              )}
+              <h4 className=" font-thin text-sm text-red-500 flex align-middle text-center">
+                Invalid Credentials
+              </h4>
+            )}
           </CardHeader>
           <CardContent>
             <div className="grid gap-4">
@@ -90,14 +97,22 @@ const Login = () => {
                     Forgot your password?
                   </Link>
                 </div>
-                <Input id="password" type="password" onChange={(e) => setPassword(e.target.value)} required />
+                <Input
+                  id="password"
+                  type="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
               </div>
               <Button type="submit" onClick={handleSubmit} className="w-full">
                 Login
               </Button>
-              {/* <Button variant="outline" className="w-full">
-            Login with Google
-          </Button> */}
+              <Button
+                onClick={handleGoogleLogin}
+                className="bg-red-500 text-white w-full mt-2"
+              >
+                Login with Google
+              </Button>
             </div>
             <div className="mt-4 text-center text-primary text-sm">
               Don't have an account?{" "}
@@ -111,4 +126,5 @@ const Login = () => {
     </MaxWidthWrapper>
   );
 };
+
 export default Login;

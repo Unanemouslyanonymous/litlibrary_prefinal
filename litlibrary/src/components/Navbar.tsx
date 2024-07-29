@@ -5,12 +5,20 @@ import { useRouter } from "next/navigation";
 import logo from "../../public/logo.png";
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
-import { DoorOpen, Heart, Layers, Library, ShoppingCart, User } from "lucide-react";
+import {
+  DoorOpen,
+  Heart,
+  Layers,
+  Library,
+  ShoppingCart,
+  User,
+} from "lucide-react";
+
 const Navbar = () => {
   const router = useRouter();
   const authContext = useContext(AuthContext);
   if (!authContext) return null;
-  const { user, isAuthenticated,logout } = authContext;
+  const { user, isAuthenticated, logout } = authContext;
   return (
     <nav className="bg-primary text-primary-foreground p-4 shadow-2xl">
       <div className="container mx-auto flex justify-between items-center">
@@ -26,34 +34,47 @@ const Navbar = () => {
             href="/dashboard"
             className="hover:bg-secondary flex flex-row justify-center items-center hover:text-secondary-foreground p-2 rounded"
           >
-            <Layers className="mr-2" size={20}/>
+            <Layers className="mr-2" size={20} />
             Dashboard
           </Link>
-          <Link href = "/collection" className="hover:bg-secondary flex flex-row justify-center items-center hover:text-secondary-foreground p-2 rounded">
-            <Library className="mr-2" size={20}/>
+          <Link
+            href="/collection"
+            className="hover:bg-secondary flex flex-row justify-center items-center hover:text-secondary-foreground p-2 rounded"
+          >
+            <Library className="mr-2" size={20} />
             My Collection
           </Link>
           <Link
             href="/favorites"
             className="hover:bg-secondary flex flex-row justify-center items-center hover:text-secondary-foreground p-2 rounded"
           >
-            <Heart className="mr-2" size={20}/>
+            <Heart className="mr-2" size={20} />
             Favorites
           </Link>
           <Link
             href="/cart"
             className="hover:bg-secondary flex flex-row justify-center items-center hover:text-secondary-foreground p-2 rounded"
           >
-            <ShoppingCart className="mr-2" size={20}/>
+            <ShoppingCart className="mr-2" size={20} />
             Cart
           </Link>
-          { user && isAuthenticated ? (
-            <div className="flex space-x-2 items-center hover:bg-secondary hover:text-secondary-foreground rounded ">
-              <User className="mr-2" size={20}/>
-              {user.name}
-              <button onClick={logout}><DoorOpen/></button>
-            </div>
-              ) : ( <>
+          {user && isAuthenticated ? (
+            <>
+              <Link
+                href="/profile"
+                className="hover:bg-secondary flex flex-row justify-center items-center hover:text-secondary-foreground p-2 rounded"
+              >
+                <User className="mr-2" size={20} />
+                {user.name}
+              </Link>
+              <div className="hover:bg-secondary hover:cursor-pointer flex flex-row justify-center items-center hover:text-secondary-foreground p-2 rounded" onClick={logout}>
+                
+                  <DoorOpen  className="mr-2" size={20}  />
+                  Logout
+              </div>
+            </>
+          ) : (
+            <>
               <Link
                 href="/login"
                 className="hover:bg-secondary hover:text-secondary-foreground p-2 rounded"
@@ -66,9 +87,8 @@ const Navbar = () => {
               >
                 Sign Up
               </Link>
-            </>)
-           
-          }
+            </>
+          )}
         </div>
       </div>
     </nav>
