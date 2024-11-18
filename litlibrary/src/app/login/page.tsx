@@ -16,6 +16,7 @@ import { AuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import dotenv from "dotenv";
+import RecaptchaComponent from "@/components/reCAPTCHA";
 dotenv.config();
 
 const Login = () => {
@@ -27,7 +28,7 @@ const Login = () => {
 
   const router = useRouter();
   const [isError, setIsError] = useState<boolean>(false);
-
+  const [reCaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   useEffect(() => {
     console.log("isAuthenticated:", isAuthenticated);
     if (isAuthenticated) {
@@ -43,6 +44,7 @@ const Login = () => {
         {
           email,
           password,
+          reCaptchaToken,
         }
       );
       login(res.data.token);
@@ -65,11 +67,11 @@ const Login = () => {
             <CardDescription>
               Enter your email below to login to your account
             </CardDescription>
-            {isError && (
+            {isError ? (
               <h4 className=" font-thin text-sm text-red-500 flex align-middle text-center">
                 Invalid Credentials
               </h4>
-            )}
+            ): (<span></span>)}
           </CardHeader>
           <CardContent>
             <div className="grid gap-4">
@@ -104,7 +106,8 @@ const Login = () => {
                   required
                 />
               </div>
-              <Button type="submit" onClick={handleSubmit} className="w-full">
+              <RecaptchaComponent onChange={setRecaptchaToken} />
+              <Button type="submit" onClick={handleSubmit} disabled={!reCaptchaToken} className="w-full">
                 Login
               </Button>
               <Button

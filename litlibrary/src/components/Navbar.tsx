@@ -10,15 +10,20 @@ import {
   Heart,
   Layers,
   Library,
+  Moon,
   ShoppingCart,
+  Sun,
   User,
 } from "lucide-react";
+import { useTheme } from "@/context/themeContext";
 
 const Navbar = () => {
   const router = useRouter();
   const authContext = useContext(AuthContext);
-  if (!authContext) return null;
+  const themeContext = useTheme();
+  if (!authContext || !themeContext) return null;
   const { user, isAuthenticated, logout } = authContext;
+  const { theme, toggleTheme } = themeContext;
   return (
     <nav className="bg-primary text-primary-foreground p-4 shadow-2xl">
       <div className="container mx-auto flex justify-between items-center">
@@ -89,6 +94,13 @@ const Navbar = () => {
               </Link>
             </>
           )}
+          <button onClick={toggleTheme}>
+              {theme === "dark" ? (
+                <Sun size={24} strokeWidth={3} absoluteStrokeWidth />
+              ) : (
+                <Moon size={24} strokeWidth={3} />
+              )}
+            </button>
         </div>
       </div>
     </nav>

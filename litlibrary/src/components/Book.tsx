@@ -1,6 +1,7 @@
 "use client";
-
-import { useState, useEffect, useContext } from "react";
+import 'lazysizes'
+import 'lazysizes/plugins/parent-fit/ls.parent-fit';
+import { useState, useEffect, useContext, lazy, Suspense } from "react";
 import axios from "axios";
 import { Eye, Heart, HeartCrack } from "lucide-react";
 import { AuthContext } from "@/context/AuthContext";
@@ -8,12 +9,15 @@ import { Card, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ReviewModal from "./ReviewModal";
-import Review from "./Review";
+// import ReviewModal from "./ReviewModal";
+// import Review from "./Review";
 import dotenv from "dotenv";
 import bookModel from "@/app/models/bookModel";
+import ClipLoader from 'react-spinners/ClipLoader';
 dotenv.config();
 
+const Review = lazy(() => import('./Review'));
+const ReviewModal = lazy(() => import('./ReviewModal'));
 interface BookProps {
   book: {
     title: string;
@@ -194,12 +198,13 @@ const Book: React.FC<BookProps> = ({ book }) => {
         </div>
       </Card>
       {isPopupOpen && (
-        <div className="fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
+        <Suspense fallback={<div><ClipLoader/></div>}>
+          <div className="fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-4 rounded w-[60vw]">
             <div className="flex flex-col items-center justify-center">
               <h2 className="text-xl font-semibold"><b>{book.title}</b></h2>
               <div className="flex flex-row justify-center items-center mt-3">
-                <img src={book.cover?.thumbnail} alt={book.title} width={200} height={200} />
+                <img src={book.cover?.thumbnail} className="lazyload" data-sizes="auto" alt={book.title} width={200} height={200} />
                 <div className="flex flex-col">
                   <p><b>Authors</b>: {book.authors.join(", ")}</p>
                   <p><b>Publish Date</b>: {book.publish_date}</p>
@@ -254,6 +259,8 @@ const Book: React.FC<BookProps> = ({ book }) => {
             </div>
           </div>
         </div>
+        </Suspense>
+        
       )}
     </div>
   );

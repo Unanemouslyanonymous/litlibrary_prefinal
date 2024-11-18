@@ -4,16 +4,22 @@
   "main": "server.js",
   "type": "module",
   "dependencies": {
-    "axios": "^1.7.2",
+    "@pinecone-database/pinecone": "^3.0.0",
+    "axios": "^1.7.4",
     "bcrypt": "^5.1.1",
+    "connect-redis": "^7.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "express-session": "^1.18.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.1",
     "passport": "^0.7.0",
-    "passport-google-oauth20": "^2.0.0"
+    "passport-google-oauth20": "^2.0.0",
+    "redis": "^4.7.0",
+    "transformers": "^3.1.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

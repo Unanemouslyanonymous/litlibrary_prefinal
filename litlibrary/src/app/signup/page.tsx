@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
 import axios from "axios";
 import dotenv from "dotenv";
+import RecaptchaComponent from "@/components/reCAPTCHA";
 dotenv.config();
 export const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -33,6 +34,7 @@ export const SignUp = () => {
   const [isCustom, setIsCustom] = useState(false);
   const [customQuestion, setCustomQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  const [reCaptchaToken, setReCaptchaToken] = useState<string | null>(null);
   const router = useRouter();
 
   const authContext = useContext(AuthContext);
@@ -58,6 +60,7 @@ export const SignUp = () => {
         password,
         securityQuestion,
         answer,
+        reCaptchaToken
       });
       register(response.data.token);
       console.log(response);
@@ -178,6 +181,7 @@ export const SignUp = () => {
                 />
               </div>
             </div>
+            <RecaptchaComponent onChange={setReCaptchaToken} />
             <Button type="submit" className="w-full" onClick={handleSubmit}>
               Create an account
             </Button>
